@@ -1,507 +1,417 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Behavioral Finance in the Digital Age</title>
+    <title>Interactive Report: Behavioral Finance in the Digital Age</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <!--
-    Infographic Narrative Plan:
-    1.  Introduction/Hook: A powerful title and a "big number" statistic to grab attention, highlighting the surge in young investors.
-    2.  The New Investor Profile: A demographic breakdown of the survey respondents using donut charts to show age, occupation, and experience. This establishes the context of a young, digitally-native investor base.
-    3.  The Psychology of the Digital Investor: A deep dive into the core behavioral biases (Overconfidence, Herding/FOMO, Loss Aversion) using horizontal bar charts for clear comparison of agreement levels.
-    4.  The Digital Dilemma - Information vs. Trust: A section exploring where investors get their information versus what they actually trust. A radar chart will visualize this tension, and a dedicated card will highlight the crucial "cross-checking" behavior.
-    5.  The "Noise Trading" Effect: A concluding section that connects the dots between biases and market volatility using a flowchart-style diagram built with HTML/Tailwind CSS. This visually explains how individual psychology scales up to market-level phenomena.
-    6.  Conclusion & Key Takeaway: A final card summarizing the core finding: digital platforms amplify bias, but literacy is emerging.
-
-    Visualization Choices & Justification (NO SVG, NO MERMAID JS USED):
-    -   Demographic Profile (Age, Occupation): Goal: Compare/Inform. Visualization: Donut Chart. Library: Chart.js/Canvas. Justification: Excellent for showing simple proportional breakdowns of a whole, fitting the "professional & stylish" theme. Confirmed NO SVG.
-    -   Investor Experience: Goal: Compare. Visualization: Ordered Horizontal Bar Chart. Library: Chart.js/Canvas. Justification: Clearer for comparing categories with different lengths of text labels than a vertical bar chart. Confirmed NO SVG.
-    -   Behavioral Biases (Overconfidence, Herding, Loss Aversion): Goal: Compare. Visualization: Grouped Horizontal Bar Charts. Library: Chart.js/Canvas. Justification: Allows for direct comparison of multiple statements within a single bias category, making the data easy to digest. Labels are wrapped. Confirmed NO SVG.
-    -   Information Source - Use vs. Trust: Goal: Compare/Relationships. Visualization: Radar Chart. Library: Chart.js/Canvas. Justification: A powerful way to show the disparity between two metrics (use and trust) across multiple categories (information sources) in one compact visualization. Confirmed NO SVG.
-    -   Cross-Checking Behavior: Goal: Inform. Visualization: Single Big Number/Text. Library: HTML/Tailwind. Justification: A large, bold percentage is the most effective way to convey this critical counter-point. Confirmed NO SVG.
-    -   Noise Trading Flow: Goal: Organize. Visualization: Flow Chart. Library: HTML/CSS with Tailwind. Justification: A custom diagram built with styled divs and flexbox clearly illustrates the process flow from individual bias to market impact, without relying on SVG or Mermaid JS. Confirmed NO SVG.
-
-    Color Palette Chosen: "Energetic & Playful" for its vibrant, high-contrast colors (#003f5c, #58508d, #bc5090, #ff6361, #ffa600) which make the data engaging and easy to differentiate, suitable for a modern, digital-focused topic.
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Calm Neutral -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative journey. It begins with a hook and introduces the "new investor" via demographic charts. It then flows into the core of the study: an interactive exploration of key behavioral biases using a tabbed interface for clarity. The next section visualizes the central conflict of digital influence—widespread use of social media versus trust in traditional sources—using a radar chart. This is followed by a visual flowchart explaining how individual biases scale up to create market "noise." The application concludes with actionable recommendations. This thematic, story-driven structure was chosen over a linear report format to maximize user engagement and comprehension, guiding the user from identifying the actors to understanding their psychology and its market-wide consequences. -->
+    <!-- Visualization & Content Choices: 
+        - Demographics (Age/Occupation): Goal: Inform. Viz: Donut Charts (Chart.js). Justification: Clear proportional representation.
+        - Demographics (Experience): Goal: Compare. Viz: Horizontal Bar Chart (Chart.js). Justification: Better readability for categorical labels.
+        - Behavioral Biases: Goal: Compare/Explore. Viz: Grouped Horizontal Bar Charts within an interactive tabbed view (HTML/JS). Justification: Prevents information overload and allows focused exploration of each bias.
+        - Information Use vs. Trust: Goal: Show Relationship/Tension. Viz: Radar Chart (Chart.js). Justification: Excellently visualizes the disparity between the two metrics across multiple sources.
+        - Noise Trading Mechanism: Goal: Explain Process. Viz: HTML/Tailwind Flowchart. Justification: A clear, custom diagram showing a process flow without using prohibited SVG/Mermaid.
+        - Key Stats: Goal: Inform/Hook. Viz: Large typography "Big Number" cards. Justification: High impact for key data points.
     -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        h1, h2, h3 {
+            font-family: 'Lora', serif;
+            font-weight: 600;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px;
-            max-height: 400px;
+            height: 300px;
+            max-height: 350px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 350px;
+                height: 320px;
+                max-height: 400px;
             }
-        }
-        .text-shadow {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .card {
             background-color: white;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             padding: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background-color: #343a40;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
         .flow-arrow {
             font-size: 2.5rem;
             line-height: 1;
-            color: #58508d;
+            color: #6c757d;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-gray-800">
+<body class="antialiased">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">Behavioral Finance Report</h1>
+            <div class="hidden md:flex space-x-6 text-sm font-semibold">
+                <a href="#demographics" class="text-gray-600 hover:text-gray-900">Demographics</a>
+                <a href="#biases" class="text-gray-600 hover:text-gray-900">Core Biases</a>
+                <a href="#digital-influence" class="text-gray-600 hover:text-gray-900">Digital Influence</a>
+                <a href="#market-impact" class="text-gray-600 hover:text-gray-900">Market Impact</a>
+                <a href="#recommendations" class="text-gray-600 hover:text-gray-900">Recommendations</a>
+            </div>
+        </nav>
+    </header>
 
-        <header class="text-center my-8 md:my-12">
-            <h1 class="text-4xl md:text-6xl font-black text-[#003f5c] text-shadow">Behavioral Finance in the Digital Age</h1>
-            <p class="text-lg md:text-xl text-gray-600 mt-4 max-w-3xl mx-auto">An infographic based on a study of 106 Indian investors, revealing how modern psychology and technology are reshaping financial markets.</p>
-        </header>
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 md:p-8">
 
-        <main class="space-y-12">
+        <!-- Hero Section -->
+        <section class="text-center my-8 md:my-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">The Digital Age Investor</h1>
+            <p class="text-lg text-gray-600 mt-4 max-w-3xl mx-auto">An interactive analysis of how investor psychology, amplified by technology, is reshaping financial markets in India based on a survey of 106 retail investors.</p>
+        </section>
 
-            <section id="demographics" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="card md:col-span-2 lg:col-span-1 lg:row-span-2 flex flex-col justify-center items-center text-center p-8 bg-[#003f5c] text-white">
-                     <h2 class="text-2xl font-bold mb-4">The New Wave of Investors</h2>
-                    <p class="text-7xl font-black text-[#ffa600]">75%</p>
-                    <p class="text-lg mt-2">of surveyed investors are under the age of 35, highlighting a massive generational shift driven by digital access.</p>
+        <!-- Section 1: The New Investor Landscape -->
+        <section id="demographics" class="my-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">The New Investor Landscape</h2>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">The study's participants reflect a major shift in market demographics. The modern investor in India is predominantly young, digitally-native, and gaining experience in a rapidly evolving ecosystem.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card lg:col-span-1 flex flex-col justify-center items-center text-center p-8 bg-gray-800 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Youth Driven Market</h3>
+                    <p class="text-7xl font-bold text-amber-400">74.5%</p>
+                    <p class="text-lg mt-2">of surveyed investors are under the age of 35, signaling a profound generational shift.</p>
                 </div>
                 <div class="card">
-                    <h3 class="font-bold text-xl mb-4 text-center text-[#003f5c]">Investor Age Profile</h3>
-                    <div class="chart-container h-64 md:h-72">
-                        <canvas id="ageChart"></canvas>
-                    </div>
-                    <p class="text-center text-sm text-gray-600 mt-4">A vast majority are young adults, indicating a digitally native investor base.</p>
-                </div>
-                <div class="card">
-                    <h3 class="font-bold text-xl mb-4 text-center text-[#003f5c]">Occupation Breakdown</h3>
+                    <h3 class="font-bold text-xl mb-4 text-center">Occupation Profile</h3>
                     <div class="chart-container h-64 md:h-72">
                         <canvas id="occupationChart"></canvas>
                     </div>
-                     <p class="text-center text-sm text-gray-600 mt-4">Students and new professionals form a significant portion of the market.</p>
                 </div>
-                 <div class="card md:col-span-2">
-                    <h3 class="font-bold text-xl mb-4 text-center text-[#003f5c]">Years of Investing Experience</h3>
-                    <div class="chart-container h-72 md:h-80 w-full max-w-3xl">
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-4 text-center">Investing Experience</h3>
+                    <div class="chart-container h-64 md:h-72">
                         <canvas id="experienceChart"></canvas>
                     </div>
-                    <p class="text-center text-sm text-gray-600 mt-4">While a quarter have over 5 years of experience, a significant group of newer investors are still navigating the markets.</p>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="biases" class="space-y-8">
-                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">The Psychology of the Digital Investor</h2>
-                    <p class="text-lg text-gray-600 mt-2">The data reveals a strong prevalence of key behavioral biases that drive decisions.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="card">
-                        <h3 class="font-bold text-xl mb-4 text-[#bc5090]">Overconfidence Bias</h3>
-                        <p class="text-sm text-gray-600 mb-4">A majority feel their knowledge is superior and trust their own judgment, leading to potentially higher risk-taking.</p>
-                        <div class="chart-container h-64">
-                             <canvas id="overconfidenceChart"></canvas>
-                        </div>
-                    </div>
-                     <div class="card">
-                        <h3 class="font-bold text-xl mb-4 text-[#ff6361]">Herding & FOMO</h3>
-                         <p class="text-sm text-gray-600 mb-4">Decisions are heavily influenced by popular trends and peer activity, fueling momentum-driven trades.</p>
-                         <div class="chart-container h-64">
-                             <canvas id="herdingChart"></canvas>
-                         </div>
-                    </div>
-                    <div class="card">
-                        <h3 class="font-bold text-xl mb-4 text-[#58508d]">Loss Aversion</h3>
-                        <p class="text-sm text-gray-600 mb-4">The pain of losing money is felt more deeply than the joy of an equivalent gain, leading to irrational choices.</p>
-                        <div class="chart-container h-64">
-                            <canvas id="lossAversionChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <!-- Section 2: Core Psychological Biases -->
+        <section id="biases" class="my-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Anatomy of a Digital Investor's Mind</h2>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">The survey confirms the strong presence of key behavioral biases. These psychological shortcuts significantly influence investment decisions, often leading to irrational outcomes. Explore the data by selecting a bias below.</p>
+            </div>
             
-            <section id="information" class="space-y-8">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">The Digital Dilemma: Information vs. Trust</h2>
-                    <p class="text-lg text-gray-600 mt-2">Investors consume information from many sources, but only trust a select few.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="card md:col-span-2">
-                        <h3 class="font-bold text-xl mb-4 text-center text-[#003f5c]">Information Source: Usage vs. Trust</h3>
-                        <p class="text-center text-sm text-gray-600 mb-4">This chart reveals a critical gap. While social media is widely used for ideas, traditional news and company reports are overwhelmingly more trusted for actual decision-making.</p>
-                         <div class="chart-container max-w-lg h-80 md:h-96">
-                            <canvas id="trustChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="card flex flex-col justify-center items-center text-center bg-[#58508d] text-white">
-                        <h3 class="text-2xl font-bold">A Sign of Growing Literacy?</h3>
-                        <p class="text-8xl font-black text-[#ffa600] my-4">76%</p>
-                        <p class="text-lg">of investors "Always" or "Often" cross-check information from social media with credible sources before acting.</p>
-                        <p class="text-sm mt-4 opacity-80">This crucial verification step challenges the idea that digital influence leads only to irrationality.</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="noise-trading" class="space-y-8">
-                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">The "Noise Trading" Effect</h2>
-                    <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Here’s how individual psychological biases, amplified by digital platforms, scale up to create market-wide volatility and distortion.</p>
+            <div class="card">
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+                    <button class="tab-btn active px-4 py-2 text-sm font-semibold rounded-full bg-gray-200 text-gray-700" onclick="switchTab('overconfidence')">Overconfidence</button>
+                    <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-full bg-gray-200 text-gray-700" onclick="switchTab('herding')">Herding & FOMO</button>
+                    <button class="tab-btn px-4 py-2 text-sm font-semibold rounded-full bg-gray-200 text-gray-700" onclick="switchTab('loss-aversion')">Loss Aversion</button>
                 </div>
                 
-                <div class="card p-8">
-                    <div class="flex flex-col md:flex-row items-center justify-around space-y-6 md:space-y-0 md:space-x-6 text-center">
-
-                        <div class="flex flex-col items-center">
-                            <div class="p-4 bg-red-100 rounded-lg w-48">
-                                <p class="font-bold text-[#ff6361]">Individual Biases</p>
-                                <p class="text-xs text-gray-700">Overconfidence, FOMO, Herding</p>
-                            </div>
-                        </div>
-
-                        <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-
-                        <div class="flex flex-col items-center">
-                            <div class="p-4 bg-purple-100 rounded-lg w-48">
-                                <p class="font-bold text-[#58508d]">Digital Amplification</p>
-                                <p class="text-xs text-gray-700">Social Media Hype, Easy App-based Trading</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-
-                         <div class="flex flex-col items-center">
-                             <div class="p-4 bg-orange-100 rounded-lg w-48">
-                                <p class="font-bold text-[#ffa600]">Collective Behavior</p>
-                                <p class="text-xs text-gray-700">Emotion-driven trades, Trend-following</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
-
-                         <div class="flex flex-col items-center">
-                            <div class="p-4 bg-blue-100 rounded-lg w-48">
-                                <p class="font-bold text-[#003f5c]">Market Impact</p>
-                                <p class="text-xs text-gray-700">Increased Volatility, Price Bubbles, "Noise"</p>
-                            </div>
-                        </div>
-                        
+                <div id="overconfidence" class="tab-content">
+                    <p class="text-center text-gray-600 text-sm mb-4 max-w-xl mx-auto">A significant majority feel their knowledge is superior and trust their own judgment, which can lead to excessive trading and underestimation of risk.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="overconfidenceChart"></canvas>
                     </div>
                 </div>
-            </section>
+                <div id="herding" class="tab-content hidden">
+                    <p class="text-center text-gray-600 text-sm mb-4 max-w-xl mx-auto">Investors show a strong tendency to follow the crowd and act on the "fear of missing out," often abandoning personal analysis for popular opinion.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="herdingChart"></canvas>
+                    </div>
+                </div>
+                <div id="loss-aversion" class="tab-content hidden">
+                     <p class="text-center text-gray-600 text-sm mb-4 max-w-xl mx-auto">The pain of a loss is felt more deeply than the pleasure of an equivalent gain, leading investors to hold losers too long and sell winners too soon.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="lossAversionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-             <footer class="text-center mt-12 py-8 border-t border-gray-300">
-                <h2 class="text-2xl font-bold text-[#003f5c]">Key Takeaway</h2>
-                <p class="text-md text-gray-600 mt-2 max-w-3xl mx-auto">Rapid financial inclusion via digital channels creates a systemic vulnerability to amplified behavioral biases and noise trading. However, the emerging habit of cross-verification suggests that investor education and digital literacy can pave the way for a more stable and rational market.</p>
-                 <p class="text-xs text-gray-400 mt-8">Infographic based on the research project "Behavioral Finance in the Digital Age" by Vandit Jain. Visualized by Canvas Infographics.</p>
-            </footer>
+        <!-- Section 3: Digital Influence -->
+        <section id="digital-influence" class="my-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">The Digital Double-Edged Sword</h2>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Digital platforms have democratized information access, but how does this influence investor decisions? The data reveals a critical tension between where investors look for information and which sources they ultimately trust.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="card md:col-span-3">
+                    <h3 class="font-bold text-xl mb-4 text-center">Information Use vs. Trust</h3>
+                    <p class="text-sm text-center text-gray-600 mb-4">While social media is widely used to gather ideas, traditional sources like financial news and company reports command far greater trust for making final decisions.</p>
+                     <div class="chart-container max-w-lg h-80 md:h-96">
+                        <canvas id="trustChart"></canvas>
+                    </div>
+                </div>
+                <div class="card md:col-span-2 flex flex-col justify-center items-center text-center bg-teal-600 text-white">
+                    <h3 class="text-2xl font-bold">A Sign of Emerging Literacy</h3>
+                    <p class="text-8xl font-black text-white my-4">76%</p>
+                    <p class="text-lg">of investors "Always" or "Often" cross-check information from social media with credible sources before acting.</p>
+                    <p class="text-sm mt-4 opacity-80">This verification habit suggests that digital influence isn't absolute, and a culture of healthy skepticism is developing.</p>
+                </div>
+            </div>
+        </section>
 
-        </main>
+        <!-- Section 4: Market Impact -->
+        <section id="market-impact" class="my-16 scroll-mt-20">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">From Individual Bias to Market "Noise"</h2>
+                <p class="mt-2 text-gray-600 max-w-3xl mx-auto">The collective actions of individual investors, driven by psychological biases and amplified by digital platforms, do not just affect personal portfolios. They scale up to create market-wide "noise," increasing volatility and causing prices to detach from fundamental value.</p>
+            </div>
+            
+            <div class="card p-8">
+                <div class="flex flex-col md:flex-row items-center justify-around space-y-6 md:space-y-0 md:space-x-6 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="p-4 bg-red-100 rounded-lg w-48 h-24 flex items-center justify-center">
+                            <div>
+                                <p class="font-bold text-red-800">1. Individual Biases</p>
+                                <p class="text-xs text-red-700">Overconfidence, FOMO, Herding, Loss Aversion</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
+                    <div class="flex flex-col items-center">
+                        <div class="p-4 bg-sky-100 rounded-lg w-48 h-24 flex items-center justify-center">
+                            <div>
+                                <p class="font-bold text-sky-800">2. Digital Amplification</p>
+                                <p class="text-xs text-sky-700">Social Media Hype & Low-Cost Trading Apps</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
+                     <div class="flex flex-col items-center">
+                         <div class="p-4 bg-amber-100 rounded-lg w-48 h-24 flex items-center justify-center">
+                            <div>
+                                <p class="font-bold text-amber-800">3. Collective Behavior</p>
+                                <p class="text-xs text-amber-700">Emotion-driven trades & Trend-following</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow transform md:rotate-0 rotate-90">→</div>
+                     <div class="flex flex-col items-center">
+                        <div class="p-4 bg-gray-200 rounded-lg w-48 h-24 flex items-center justify-center">
+                           <div>
+                                <p class="font-bold text-gray-800">4. Market Impact</p>
+                                <p class="text-xs text-gray-700">Increased Volatility & Price Bubbles ("Noise")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    </div>
+        <!-- Section 5: Recommendations -->
+        <section id="recommendations" class="my-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Pathways to a More Rational Market</h2>
+                <p class="mt-2 text-gray-600 max-w-2xl mx-auto">The findings suggest several actionable recommendations for investors, educators, and regulators to mitigate the negative impacts of behavioral biases and foster a healthier market ecosystem.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Investor Education</h3>
+                    <p class="text-sm mt-1 text-gray-600">Integrate behavioral awareness into financial literacy programs, teaching investors to recognize and manage their own psychological biases.</p>
+                </div>
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Digital Literacy</h3>
+                    <p class="text-sm mt-1 text-gray-600">Promote campaigns on how to vet online information, identify misinformation, and avoid herd-following based on social media hype.</p>
+                </div>
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Regulate "Finfluencers"</h3>
+                    <p class="text-sm mt-1 text-gray-600">Establish clear guidelines and disclosure requirements for online personalities giving financial advice to protect investors.</p>
+                </div>
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Behavioral "Nudges"</h3>
+                    <p class="text-sm mt-1 text-gray-600">Trading platforms can add features like "cooling-off" periods for volatile assets or risk warnings to curb impulsive trades.</p>
+                </div>
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Mentorship Networks</h3>
+                    <p class="text-sm mt-1 text-gray-600">Connect new investors with experienced mentors to foster long-term perspectives over short-term speculative behavior.</p>
+                </div>
+                <div class="card !p-4">
+                    <h3 class="font-bold text-lg">Enhanced Onboarding</h3>
+                    <p class="text-sm mt-1 text-gray-600">Brokerages should explicitly address common psychological pitfalls like FOMO during the new user onboarding process.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto py-8 px-6 text-center text-sm">
+            <p>This interactive application is an adaptation of the research project "Behavioral Finance in the Digital Age: The Impact of Investor Psychology on Financial Market Dynamics."</p>
+            <p class="text-xs text-gray-400 mt-2">Data based on a survey of 106 investors in India. Visualized by Gemini.</p>
+        </div>
+    </footer>
 
     <script>
-        const colorPalette = {
-            blue: '#003f5c',
-            purple: '#58508d',
-            magenta: '#bc5090',
-            red: '#ff6361',
-            orange: '#ffa600',
-            lightBlue: 'rgba(0, 63, 92, 0.2)',
-            lightPurple: 'rgba(88, 80, 141, 0.2)',
-        };
-        
-        function wrapLabel(str, maxWidth) {
-            if (str.length <= maxWidth) {
-                return str;
-            }
-            const words = str.split(' ');
-            let lines = [];
-            let currentLine = words[0];
+        document.addEventListener('DOMContentLoaded', () => {
 
-            for (let i = 1; i < words.length; i++) {
-                if ((currentLine + ' ' + words[i]).length > maxWidth) {
-                    lines.push(currentLine);
-                    currentLine = words[i];
-                } else {
-                    currentLine += ' ' + words[i];
-                }
-            }
-            lines.push(currentLine);
-            return lines;
-        }
-
-        const tooltipTitleCallback = {
-             plugins: {
-                tooltip: {
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            const item = tooltipItems[0];
-                            let label = item.chart.data.labels[item.dataIndex];
-                            if (Array.isArray(label)) {
-                              return label.join(' ');
-                            } else {
-                              return label;
+            const chartColors = {
+                dark: '#343a40',
+                medium: '#6c757d',
+                accent: '#D69E2E',
+                teal: '#20c997',
+                red: '#dc3545',
+                blue: '#0d6efd',
+                darkTransparent: 'rgba(52, 58, 64, 0.7)',
+                accentTransparent: 'rgba(214, 158, 46, 0.7)',
+            };
+            
+            const tooltipTitleCallback = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                }
+                                return label;
                             }
                         }
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                     labels: {
-                        padding: 15,
-                        font: { size: 12 }
-                    }
-                }
-            }
-        };
-
-        const ageData = {
-            labels: ['18–24', '25–34', '35–44', '45–54', '55+'],
-            datasets: [{
-                label: 'Age Group',
-                data: [43.4, 31.1, 15.1, 5.7, 4.7],
-                backgroundColor: [colorPalette.blue, colorPalette.purple, colorPalette.magenta, colorPalette.red, colorPalette.orange],
-                borderColor: '#ffffff',
-                borderWidth: 2
-            }]
-        };
-        new Chart(document.getElementById('ageChart'), {
-            type: 'doughnut',
-            data: ageData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: tooltipTitleCallback.plugins
-            }
-        });
-
-        const occupationData = {
-            labels: ['Student', 'Trader/Investor', 'Working Prof. (Non-Finance)', 'Working Prof. (Finance)'],
-            datasets: [{
-                label: 'Occupation',
-                data: [43.4, 27.4, 15.1, 14.2],
-                backgroundColor: [colorPalette.orange, colorPalette.red, colorPalette.purple, colorPalette.blue],
-                 borderColor: '#ffffff',
-                borderWidth: 2
-            }]
-        };
-        new Chart(document.getElementById('occupationChart'), {
-            type: 'doughnut',
-            data: occupationData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: tooltipTitleCallback.plugins
-            }
-        });
-        
-        const experienceData = {
-            labels: ['More than 5 years', '3–5 years', '1–3 years', 'Less than 1 year', 'No experience'],
-            datasets: [{
-                label: '% of Investors',
-                data: [26.4, 31.1, 20.8, 12.3, 9.4],
-                backgroundColor: [colorPalette.blue, colorPalette.purple, colorPalette.magenta, colorPalette.red, colorPalette.orange],
-                borderColor: '#ffffff',
-                borderWidth: 1
-            }]
-        };
-        new Chart(document.getElementById('experienceChart'), {
-            type: 'bar',
-            data: experienceData,
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                     x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '%'
-                        }
                     },
-                    y: {
-                        ticks: {
-                            font: {size: 10}
-                        }
-                    }
-                },
-                plugins: {
-                     ...tooltipTitleCallback.plugins,
-                    legend: { display: false }
-                }
-            }
-        });
-
-
-        const overconfidenceData = {
-            labels: [
-                wrapLabel('Knowledge is superior to average', 20),
-                wrapLabel('Trust personal judgment over experts', 20),
-                wrapLabel('More confident after a success', 20)
-            ],
-            datasets: [{
-                label: 'Agree / Strongly Agree (%)',
-                data: [55.0, 52.8, 59.5],
-                backgroundColor: colorPalette.magenta,
-            }]
-        };
-        new Chart(document.getElementById('overconfidenceChart'), {
-            type: 'bar',
-            data: overconfidenceData,
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                 scales: { x: { max: 100, beginAtZero: true } },
-                 plugins: {
-                     ...tooltipTitleCallback.plugins,
-                    legend: { display: false }
-                }
-            }
-        });
-        
-         const herdingData = {
-            labels: [
-                wrapLabel('Invest in popular assets', 20),
-                wrapLabel('Feel secure when others invest', 20),
-                wrapLabel('Urge to invest on seeing others profit', 20)
-            ],
-            datasets: [{
-                label: 'Agree / Strongly Agree (%)',
-                data: [50.0, 43.4, 43.0],
-                backgroundColor: colorPalette.red,
-            }]
-        };
-        new Chart(document.getElementById('herdingChart'), {
-            type: 'bar',
-            data: herdingData,
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                 scales: { x: { max: 100, beginAtZero: true } },
-                 plugins: {
-                     ...tooltipTitleCallback.plugins,
-                    legend: { display: false }
-                }
-            }
-        });
-
-         const lossAversionData = {
-            labels: [
-                wrapLabel('More distress over a loss than joy over a gain', 25),
-                wrapLabel('Hesitant to sell losing investments', 20),
-                wrapLabel('Sell profitable investments quickly', 20)
-            ],
-            datasets: [{
-                label: 'Agree / Strongly Agree (%)',
-                data: [44.4, 41.6, 43.4],
-                backgroundColor: colorPalette.purple,
-            }]
-        };
-        new Chart(document.getElementById('lossAversionChart'), {
-            type: 'bar',
-            data: lossAversionData,
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                 scales: { x: { max: 100, beginAtZero: true } },
-                 plugins: {
-                     ...tooltipTitleCallback.plugins,
-                    legend: { display: false }
-                }
-            }
-        });
-        
-        const trustData = {
-          labels: [
-            'Social Media (X, Insta)', 'Group Chats (Tele, WA)', 'Reddit', 'YouTube', 'Search Engines', 'Financial News', 'Company Reports'
-          ],
-          datasets: [
-            {
-              label: 'Usage for Info',
-              data: [85, 78, 65, 92, 98, 95, 88],
-              backgroundColor: colorPalette.lightPurple,
-              borderColor: colorPalette.purple,
-              borderWidth: 2,
-              pointBackgroundColor: colorPalette.purple,
-              pointBorderColor: '#fff',
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: colorPalette.purple
-            },
-            {
-              label: 'Trusted for Decisions',
-              data: [10, 12, 15, 25, 85, 95, 90],
-              backgroundColor: colorPalette.lightBlue,
-              borderColor: colorPalette.blue,
-              borderWidth: 2,
-              pointBackgroundColor: colorPalette.blue,
-              pointBorderColor: '#fff',
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: colorPalette.blue
-            }
-          ]
-        };
-
-        new Chart(document.getElementById('trustChart'), {
-            type: 'radar',
-            data: trustData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        pointLabels: {
-                            font: {
-                                size: 10
-                            },
-                            color: '#333'
-                        },
-                        ticks: {
-                            backdropColor: 'transparent',
-                            color: '#777',
-                            stepSize: 25
-                        },
-                         suggestedMin: 0,
-                         suggestedMax: 100
-                    }
-                },
-                plugins: {
                     legend: {
-                        position: 'top',
+                        position: 'bottom',
+                        labels: { padding: 15, font: { size: 12 } }
                     }
                 }
+            };
+
+            function wrapLabel(str, maxWidth) {
+                if (!str || str.length <= maxWidth) return str;
+                const words = str.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+                for (let i = 1; i < words.length; i++) {
+                    if ((currentLine + ' ' + words[i]).length > maxWidth) {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    } else {
+                        currentLine += ' ' + words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
             }
+
+            // Chart 1: Occupation
+            new Chart(document.getElementById('occupationChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Student', 'Trader/Investor', 'Working Prof. (Non-Finance)', 'Working Prof. (Finance)'],
+                    datasets: [{
+                        data: [43.4, 27.4, 15.1, 14.2],
+                        backgroundColor: [chartColors.accent, chartColors.dark, chartColors.medium, chartColors.teal],
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: tooltipTitleCallback.plugins }
+            });
+
+            // Chart 2: Experience
+            new Chart(document.getElementById('experienceChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['< 1 year', '1-3 years', '3-5 years', '> 5 years', 'No experience'],
+                    datasets: [{
+                        label: '% of Investors',
+                        data: [12.3, 20.8, 31.1, 26.4, 9.4],
+                        backgroundColor: chartColors.darkTransparent,
+                        borderColor: chartColors.dark,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { beginAtZero: true, title: { display: true, text: '%' } } },
+                    plugins: { ...tooltipTitleCallback.plugins, legend: { display: false } }
+                }
+            });
+
+            // Bias Charts
+            const overconfidenceData = {
+                labels: [wrapLabel('Knowledge is superior to average', 25), wrapLabel('Trust personal judgment over experts', 25), wrapLabel('More confident after a success', 25)],
+                datasets: [{ label: 'Agree / Strongly Agree (%)', data: [55.0, 52.8, 59.5], backgroundColor: chartColors.accentTransparent, borderColor: chartColors.accent, borderWidth: 1 }]
+            };
+            const herdingData = {
+                labels: [wrapLabel('Invest in popular assets', 25), wrapLabel('Feel secure when others invest', 25), wrapLabel('Urge to invest on seeing others profit', 25)],
+                datasets: [{ label: 'Agree / Strongly Agree (%)', data: [50.0, 43.4, 43.0], backgroundColor: chartColors.accentTransparent, borderColor: chartColors.accent, borderWidth: 1 }]
+            };
+            const lossAversionData = {
+                labels: [wrapLabel('Distress over loss > joy over gain', 30), wrapLabel('Hesitant to sell losing investments', 30), wrapLabel('Sell profitable investments quickly', 30)],
+                datasets: [{ label: 'Agree / Strongly Agree (%)', data: [44.4, 41.6, 43.4], backgroundColor: chartColors.accentTransparent, borderColor: chartColors.accent, borderWidth: 1 }]
+            };
+            
+            const biasChartOptions = {
+                indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                scales: { x: { max: 75, beginAtZero: true, title: {display: true, text: 'Agreement %'} } },
+                plugins: { ...tooltipTitleCallback.plugins, legend: { display: false } }
+            };
+
+            new Chart(document.getElementById('overconfidenceChart'), { type: 'bar', data: overconfidenceData, options: biasChartOptions });
+            new Chart(document.getElementById('herdingChart'), { type: 'bar', data: herdingData, options: biasChartOptions });
+            new Chart(document.getElementById('lossAversionChart'), { type: 'bar', data: lossAversionData, options: biasChartOptions });
+
+            // Radar Chart: Trust vs Use
+            new Chart(document.getElementById('trustChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Social Media', 'YouTube', 'Group Chats', 'Search Engines', 'Financial News', 'Company Reports'],
+                    datasets: [
+                        { label: 'Usage', data: [85, 92, 78, 98, 95, 88], backgroundColor: 'rgba(74, 85, 104, 0.2)', borderColor: 'rgba(74, 85, 104, 1)', borderWidth: 2},
+                        { label: 'Trust', data: [10, 25, 12, 85, 95, 90], backgroundColor: 'rgba(214, 158, 46, 0.2)', borderColor: 'rgba(214, 158, 46, 1)', borderWidth: 2}
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 10 } } } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
         });
 
-
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.remove('hidden');
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
     </script>
 </body>
 </html>
